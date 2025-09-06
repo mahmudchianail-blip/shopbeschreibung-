@@ -741,177 +741,70 @@
             <img src="https://via.placeholder.com/400x300/16a34a/ffffff?text=Produktbild" alt="Produktbild" loading="lazy">
         </section>
 
-        <!-- OPTISPAR delivery animation -->
+        <!-- Realistische Lieferanimation (CSS-only) -->
         <style>
-        /* === THEME / TOKENS === */
-        :root{
-          --scene-bg:#0f172a; --floor:#1b2333;
-          --skin:#f2c6a0; --cloth:#6b7280; --accent:#94a3b8;
-          --box:#d4b483; --box-edge:#b08968;
-          --van-body:#e5e7eb; --van-edge:#9ca3af;
-          --van-cab:#fbbf24; --wheel:#111827; --hub:#cbd5e1; --logo:#0f172a;
-        }
-
-        /* === SCENE === */
-        .opti-van-scene{
-          position:relative; width:min(640px,100%); height:180px;
-          margin:8px auto 24px; border-radius:16px;
-          background:radial-gradient(120% 180% at 0% 0%, #151c2b 0%, var(--scene-bg) 45%, var(--scene-bg) 100%);
-          overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.25);
-        }
-        .opti-van-ground{
-          position:absolute; left:0; right:0; bottom:0; height:54px;
-          background:linear-gradient(#1a2231,#151c25);
-        }
-
-        /* === PERSON === */
-        .opti-van-person{ position:absolute; bottom:54px; left:26px; width:60px; height:100px; transform:translateX(0); }
-        .opti-van-head{ position:absolute; top:-6px; left:14px; width:26px; height:26px; border-radius:50%; background:var(--skin); }
-        .opti-van-torso{ position:absolute; top:18px; left:8px; width:30px; height:48px; background:var(--cloth); border-radius:4px; }
-        .opti-van-armU,.opti-van-armL{ position:absolute; width:10px; background:var(--cloth); transform-origin:top left; border-radius:6px; }
-        .opti-van-armU{ top:22px; left:28px; height:26px; transform:rotate(20deg); }
-        .opti-van-armL{ top:44px; left:43px; height:26px; transform:rotate(10deg); }
-        .opti-van-leg{ position:absolute; bottom:0; width:10px; height:34px; background:var(--cloth); border-radius:6px; transform-origin:top center; }
-        .opti-van-leg.left{ left:10px; } .opti-van-leg.right{ left:24px; }
-        .opti-van-box{
-          position:absolute; top:44px; left:50px; width:28px; height:28px;
-          background:var(--box); border:2px solid var(--box-edge); border-radius:3px;
-        }
-
-        /* === VAN === */
-        .opti-van-van{ position:absolute; bottom:54px; left:320px; width:190px; height:82px; }
-        .opti-van-cargo{
-          position:absolute; left:48px; top:6px; width:100px; height:56px;
-          background:var(--van-body); border:2px solid var(--van-edge); border-radius:6px;
-          box-shadow:inset 0 0 0 2px rgba(0,0,0,.02);
-        }
-        .opti-van-logo{ position:absolute; left:14px; top:18px; font-weight:900; font-size:12px; letter-spacing:.6px; color:var(--logo); }
-        .opti-van-door{
-          position:absolute; left:-28px; top:6px; width:28px; height:56px;
-          background:#f3f4f6; border:2px solid var(--van-edge); border-right:none; border-radius:6px 0 0 6px;
-        }
-        .opti-van-cab{
-          position:absolute; left:148px; top:18px; width:42px; height:42px; background:var(--van-cab);
-          border-radius:10px 10px 6px 0; box-shadow:inset 0 -2px 0 rgba(0,0,0,.12);
-        }
-        .opti-van-window{ position:absolute; left:4px; top:6px; width:28px; height:22px; background:#fff; border-radius:6px; opacity:.85; }
-        .opti-van-light{ position:absolute; right:-6px; top:18px; width:6px; height:10px; background:#ffe082; border-radius:2px; }
-        .opti-van-wheel{
-          position:absolute; bottom:-8px; width:26px; height:26px; background:var(--wheel); border-radius:50%;
-          box-shadow:inset 0 0 0 3px #0b1220, inset 0 0 0 6px #0a0f1a;
-        }
-        .opti-van-wheel::after{
-          content:""; position:absolute; inset:7px; background:var(--hub); border-radius:50%;
-          box-shadow:inset 0 0 0 3px rgba(0,0,0,.2);
-        }
-        .opti-van-wheel.back{ left:64px; } .opti-van-wheel.front{ left:138px; }
-
-        /* === DUST (on drive) === */
-        .opti-van-dust{ position:absolute; bottom:62px; width:14px; height:8px; background:radial-gradient(closest-side, #8b95a7 40%, transparent 70%); opacity:0; border-radius:50%; filter:blur(.3px); }
-        .opti-van-dust.d1{ left:330px; } .opti-van-dust.d2{ left:350px; }
-
-        /* === ANIMATION TIMELINE ===
-           0%–30%  Person läuft zum Van
-           30%–45% Übergabe: Arm streckt sich, Paket wandert in Laderaum
-           45%–58% Tür schließt
-           60%–100% Van fährt los, Räder rotieren, Staub
-        */
-        @keyframes pv-walk {
-          0%{ transform:translateX(0) translateY(0); }
-          28%{ transform:translateX(230px) translateY(0); }
-          30%{ transform:translateX(236px) translateY(0); }
-          100%{ transform:translateX(236px) translateY(0); }
-        }
-        @keyframes pv-bob { 0%,100%{ transform:translateY(0);} 12%,24%{ transform:translateY(-2px);} 18%,30%{ transform:translateY(0);} }
-        @keyframes pv-leg-left {
-          0%{ transform:rotate(18deg);} 8%{ transform:rotate(-14deg);} 16%{ transform:rotate(18deg);}
-          24%{ transform:rotate(-14deg);} 30%,100%{ transform:rotate(0deg);}
-        }
-        @keyframes pv-leg-right {
-          0%{ transform:rotate(-14deg);} 8%{ transform:rotate(18deg);} 16%{ transform:rotate(-14deg);}
-          24%{ transform:rotate(18deg);} 30%,100%{ transform:rotate(0deg);}
-        }
-        @keyframes pv-armU {
-          0%,26%{ transform:rotate(20deg); }
-          36%{ transform:rotate(0deg); }
-          44%,100%{ transform:rotate(0deg); }
-        }
-        @keyframes pv-armL {
-          0%,26%{ transform:rotate(10deg); }
-          36%{ transform:rotate(30deg); }
-          44%,100%{ transform:rotate(10deg); }
-        }
-        @keyframes pv-box {
-          0%{ transform:translate(0,0); opacity:1; }
-          28%{ transform:translate(190px,-2px); }
-          36%{ transform:translate(206px,-10px); }
-          44%{ transform:translate(240px,-10px); } /* in den Laderaum */
-          55%{ transform:translate(240px,-10px); opacity:1; }
-          56%{ opacity:0; } /* Box gilt als eingeladen */
-          100%{ opacity:0; }
-        }
-        @keyframes pv-door {
-          0%,44%{ transform:translateX(0); } /* offen (links) */
-          58%,100%{ transform:translateX(28px); } /* zu */
-        }
-        @keyframes pv-drive { 0%,59%{ transform:translateX(0);} 100%{ transform:translateX(220px);} }
-        @keyframes pv-wheel { 0%,60%{ transform:rotate(0deg);} 100%{ transform:rotate(7turn);} }
-        @keyframes pv-dust {
-          0%,60%{ opacity:0; transform:translateX(0) translateY(0) scale(.6);}
-          65%{ opacity:.65; }
-          100%{ opacity:0; transform:translateX(80px) translateY(-6px) scale(1.2); }
-        }
-
-        /* === APPLY === */
-        .opti-van-person{ animation: pv-walk 6.5s linear infinite; }
-        .opti-van-head{ animation: pv-bob 6.5s linear infinite; }
-        .opti-van-torso{ animation: pv-bob 6.5s linear infinite; }
-        .opti-van-leg.left{ animation: pv-leg-left 6.5s linear infinite; }
-        .opti-van-leg.right{ animation: pv-leg-right 6.5s linear infinite; }
-        .opti-van-armU{ animation: pv-armU 6.5s linear infinite; }
-        .opti-van-armL{ animation: pv-armL 6.5s linear infinite; }
-        .opti-van-box{ animation: pv-box 6.5s linear infinite; }
-        .opti-van-van{ animation: pv-drive 6.5s ease-in-out infinite; }
-        .opti-van-wheel{ animation: pv-wheel 6.5s ease-in-out infinite; }
-        .opti-van-dust.d1{ animation: pv-dust 6.5s ease-out infinite; }
-        .opti-van-dust.d2{ animation: pv-dust 6.5s ease-out .2s infinite; }
-
-        /* === ACCESSIBILITY === */
-        @media (prefers-reduced-motion: reduce){
-          .opti-van-scene *{ animation:none!important; }
-        }
+            /* Container */
+            .delivery-scene {
+                position: relative;
+                width: 100%;
+                max-width: 640px;
+                height: 220px;
+                margin: 24px auto;
+                border-radius: 16px;
+                overflow: hidden;
+                background: radial-gradient(120% 180% at 0% 0%, #151c2b 0%, #0f172a 45%, #0f172a 100%);
+                box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            }
+            .delivery-ground {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background: linear-gradient(#1a2231,#151c25);
+            }
+            /* Figuren */
+            .delivery-person {
+                position: absolute;
+                bottom: 60px;
+                left: -120px;
+                width: 120px;
+                height: auto;
+                animation: person-walk 8s linear infinite;
+            }
+            .delivery-van {
+                position: absolute;
+                bottom: 60px;
+                left: 300px;
+                width: 260px;
+                height: auto;
+                animation: van-drive 8s ease-in-out infinite;
+            }
+            /* Animationen */
+            @keyframes person-walk {
+                0%   { transform: translateX(0); opacity:1; }
+                35%  { transform: translateX(400px); opacity:1; }
+                45%  { transform: translateX(400px); opacity:1; }
+                50%  { transform: translateX(400px); opacity:0; }
+                100% { transform: translateX(400px); opacity:0; }
+            }
+            @keyframes van-drive {
+                0%,55% { transform: translateX(0); }
+                100%   { transform: translateX(350px); }
+            }
+            /* Bewegungen optional deaktivieren */
+            @media (prefers-reduced-motion: reduce) {
+                .delivery-person,
+                .delivery-van { animation: none !important; }
+            }
         </style>
 
-        <section class="opti-van-scene" aria-label="Zusteller lädt Paket in Optispar Lieferwagen">
-          <div class="opti-van-ground"></div>
-
-          <div class="opti-van-person" aria-hidden="true">
-            <div class="opti-van-head"></div>
-            <div class="opti-van-torso"></div>
-            <div class="opti-van-armU"></div>
-            <div class="opti-van-armL"></div>
-            <div class="opti-van-leg left"></div>
-            <div class="opti-van-leg right"></div>
-            <div class="opti-van-box" title="Paket"></div>
-          </div>
-
-          <div class="opti-van-van" aria-hidden="true">
-            <div class="opti-van-cargo">
-              <div class="opti-van-logo">OPTISPAR</div>
-              <div class="opti-van-door"></div>
-            </div>
-            <div class="opti-van-cab">
-              <div class="opti-van-window"></div>
-              <div class="opti-van-light"></div>
-            </div>
-            <div class="opti-van-wheel back"></div>
-            <div class="opti-van-wheel front"></div>
-          </div>
-
-          <div class="opti-van-dust d1"></div>
-          <div class="opti-van-dust d2"></div>
+        <section class="delivery-scene" aria-label="Zusteller lädt Paket in den Lieferwagen">
+            <div class="delivery-ground"></div>
+            <img class="delivery-person" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CjxjaXJjbGUgY3g9IjYwIiBjeT0iMjAiIHI9IjE4IiBmaWxsPSIjZjJjNmEwIi8+CjxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjUwIiByeD0iNCIgZmlsbD0iIzZiNzI4MCIvPgo8cmVjdCB4PSIzMiIgeT0iNDIiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0MCIgcng9IjYiIGZpbGw9IiM2YjcyODAiLz4KPHJlY3QgeD0iNzYiIHk9IjQyIiB3aWR0aD0iMTIiIGhlaWdodD0iNDAiIHJ4PSI2IiBmaWxsPSIjNmI3MjgwIi8+CjxyZWN0IHg9IjQ4IiB5PSI5MCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjI2IiByeD0iNiIgZmlsbD0iIzZiNzI4MCIvPgo8cmVjdCB4PSI2MCIgeT0iOTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNiIgcng9IjYiIGZpbGw9IiM2YjcyODAiLz4KPHJlY3QgeD0iODgiIHk9IjU2IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHJ4PSIzIiBmaWxsPSIjZDRiNDgzIiBzdHJva2U9IiNiMDg5NjgiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=" alt="Zusteller mit Paket">
+            <img class="delivery-van" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMjYwIDEyMCI+CjxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjE1MCIgaGVpZ2h0PSI2MCIgcng9IjYiIGZpbGw9IiNlNWU3ZWIiIHN0cm9rZT0iIzljYTNhZiIgc3Ryb2tlLXdpZHRoPSI0Ii8+Cjx0ZXh0IHg9IjExNSIgeT0iNzgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzBmMTcyYSI+T1BUSVNQQVI8L3RleHQ+CjxyZWN0IHg9IjE5MCIgeT0iNTAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI1MCIgcng9IjEwIiBmaWxsPSIjZmJiZjI0Ii8+CjxyZWN0IHg9IjE5OCIgeT0iNTYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjQiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iOTAiIGN5PSIxMDIiIHI9IjE2IiBmaWxsPSIjMTExODI3Ii8+CjxjaXJjbGUgY3g9IjkwIiBjeT0iMTAyIiByPSI4IiBmaWxsPSIjY2JkNWUxIi8+CjxjaXJjbGUgY3g9IjIxMCIgY3k9IjEwMiIgcj0iMTYiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMjEwIiBjeT0iMTAyIiByPSI4IiBmaWxsPSIjY2JkNWUxIi8+Cjwvc3ZnPg==" alt="Lieferwagen mit Optispar-Logo">
         </section>
-        <!-- /OPTISPAR delivery animation -->
+        <!-- /Realistische Lieferanimation -->
 
         <!-- Navigation -->
         <nav class="nav">
