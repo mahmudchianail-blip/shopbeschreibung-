@@ -1,8 +1,48 @@
 <!-- Optispar – universelle eBay-Vorlage (JS-frei, eBay-kompatibel) -->
-<div style="font-family:Arial,Helvetica,sans-serif; color:#1f2937; line-height:1.6; max-width:980px; margin:0 auto;">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #1f2937;
+    --surface-color: #ffffff;
+    --border-color: #e5e7eb;
+    --accent-color: #0f172a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-color: #1f2937;
+      --text-color: #f3f4f6;
+      --surface-color: #111827;
+      --border-color: #374151;
+      --accent-color: #0f172a;
+    }
+  }
+  body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: Arial,Helvetica,sans-serif;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .wrapper { max-width:980px; margin:0 auto; }
+  .brand-header { background:var(--accent-color); color:#fff; padding:18px 20px; border-radius:10px; }
+  .nav { border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color); background:var(--surface-color); padding:10px 6px; margin:12px 0; }
+  .nav a { margin-right:14px; text-decoration:none; font-weight:700; color:var(--text-color) !important; }
+  .carousel { display:flex; overflow-x:auto; gap:12px; scroll-snap-type:x mandatory; margin:8px 0 16px; }
+  .carousel img { flex:0 0 100%; scroll-snap-align:center; border:1px solid var(--border-color); border-radius:12px; width:100%; height:auto; }
+  @media (min-width:640px) {
+    .carousel img { flex:0 0 calc(50% - 12px); }
+  }
+  .rv-card { flex:0 0 300px; text-decoration:none; color:var(--text-color) !important; background:var(--surface-color) !important; border:1px solid var(--border-color) !important; border-radius:12px; padding:12px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+  @keyframes rv-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .optispar-rv-wrap { max-width:980px; margin:18px auto; overflow:hidden; background:var(--surface-color); border:1px solid var(--border-color); border-radius:12px; padding:14px; }
+  .optispar-rv-track { display:flex; gap:14px; width:max-content; animation: rv-scroll 280s linear infinite; }
+  @media (max-width:480px) { .optispar-rv-wrap .rv-card{ flex-basis:260px !important; } }
+</style>
+<div class="wrapper">
 
   <!-- Brand-Header -->
-  <div style="background:#0f172a; color:#fff; padding:18px 20px; border-radius:10px;">
+  <div class="brand-header">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       <tbody><tr>
         <td style="vertical-align:middle;">
@@ -37,13 +77,15 @@
   </a>
 </div>
 
-<!-- Hero-Bild -->
-<div style="text-align:center; margin:8px 0 16px;">
-  <img src="Bild" alt="Wasserbomben Produktbild" style="max-width:300px; width:100%; height:auto; border-radius:12px; border:1px solid #e5e7eb;">
+<!-- Bilder-Galerie -->
+<div class="carousel">
+  <img src="BILD_URL_1" alt="Produktbild 1">
+  <img src="BILD_URL_2" alt="Produktbild 2">
+  <img src="BILD_URL_3" alt="Produktbild 3">
 </div>
 
   <!-- Navigation (Sprunglinks) -->
-  <div style="border-top:1px solid #e5e7eb; border-bottom:1px solid #e5e7eb; background:#fbfbfd; padding:10px 6px; margin:12px 0;">
+  <div class="nav">
     <a href="#highlights" style="margin-right: 14px; text-decoration-line: none; font-weight: 700; color: rgb(17, 24, 39);">Highlights</a>
     <a href="#beschreibung" style="margin-right: 14px; text-decoration-line: none; color: rgb(17, 24, 39);">Beschreibung</a>
     <a href="#versand" style="margin-right: 14px; text-decoration-line: none; color: rgb(17, 24, 39);">Versand &amp; Retoure</a>
@@ -60,31 +102,6 @@
     <li>✓ <b>Sorgfältig getestet</b> – Erfüllt hohe Ansprüche an Funktion &amp; Design:contentReference[oaicite:5]{index=5}.</li>
   </ul>
 
-<!-- Optispar • 2-Bilder-Galerie (universelle Vorlage) -->
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:12px 0;">
-  <tbody><tr>
-    <!-- Bild links -->
-    <td style="width:50%; padding:6px;">
-      <div style="border:1px solid #e5e7eb; border-radius:14px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.06); background:#fff;">
-        <img src="BILD_URL_LINKS" alt="Detailbild links" style="width:100%; height:240px; display:block; object-fit:cover;">
-      </div>
-    </td>
-
-    <!-- Bild rechts -->
-    <td style="width:50%; padding:6px;">
-      <div style="border:1px solid #e5e7eb; border-radius:14px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,.06); background:#fff;">
-        <img src="BILD_URL_RECHTS" alt="Detailbild rechts" style="width:100%; height:240px; display:block; object-fit:cover;">
-      </div>
-    </td>
-  </tr>
-</tbody></table>
-
-<!-- responsiv: unter 640px einspaltig -->
-<style>
-@media (max-width:640px){
-  table[role="presentation"] > tbody > tr > td { display:block; width:100% !important; }
-}
-</style>
 
   <!-- Beschreibung -->
   <a id="beschreibung"></a>
@@ -146,8 +163,6 @@
   <div style="font-size:12px; color:#6b7280; margin:12px 0 28px;">
     Optispar GbR • USt-IdNr.: DE450378963 • Immer erreichbar über unser eBay-Nachrichtensystem
   </div>
-
-</div>
 <!-- Follow Banner -->
 <div style="background:linear-gradient(90deg,#f59e0b,#fbbf24); padding:18px; border-radius:12px; text-align:center; color:#fff; font-family:Arial,Helvetica,sans-serif; margin:18px 0;">
   <div style="font-size:18px; font-weight:700; margin-bottom:6px;">
@@ -161,20 +176,6 @@
   </a>
 </div>
 
-
-<!DOCTYPE html>
-<html lang='de'>
-<head>
-<meta charset='UTF-8'>
-<title>Optispar Bewertungen Slider</title>
-<style>
-@keyframes rv-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-.optispar-rv-wrap { font-family:Arial,Helvetica,sans-serif; max-width:980px; margin:18px auto; overflow:hidden; background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:14px; }
-.optispar-rv-track { display:flex; gap:14px; width:max-content; animation: rv-scroll 280s linear infinite; }
-@media (max-width:480px) { .optispar-rv-wrap .rv-card{ flex-basis:260px !important; } }
-</style>
-</head>
-<body>
 <div class="optispar-rv-wrap">
   <div class="optispar-rv-track">
 <a class="rv-card" href="https://www.ebay.de/fdbk/feedback_profile/optispar-shop?filter=feedback_page%3ARECEIVED_AS_SELLER%2Cperiod%3ATWELVE_MONTHS%2Coverall_rating%3APOSITIVE&commentType=POSITIVE" style="flex:0 0 300px;text-decoration:none;color:#111827;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px;box-shadow:0 2px 8px rgba(0,0,0,.05);"><div style="color:#fbbf24;font-size:18px;line-height:1;">★★★★★</div><div style="margin:8px 0;font-size:14px;">“Ware wie bestellt. Schnelle Lieferung. Guter Geschäftspartner”</div></a>
@@ -281,8 +282,7 @@
 
   </div>
 </div>
-</body>
-</html>
+</div>
 
 
 
