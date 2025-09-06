@@ -741,70 +741,189 @@
             <img src="https://via.placeholder.com/400x300/16a34a/ffffff?text=Produktbild" alt="Produktbild" loading="lazy">
         </section>
 
-        <!-- Realistische Lieferanimation (CSS-only) -->
+        <!-- Optispar – Realistische Lieferanimation (ohne JavaScript) -->
         <style>
-            /* Container */
-            .delivery-scene {
-                position: relative;
-                width: 100%;
-                max-width: 640px;
-                height: 220px;
-                margin: 24px auto;
-                border-radius: 16px;
-                overflow: hidden;
-                background: radial-gradient(120% 180% at 0% 0%, #151c2b 0%, #0f172a 45%, #0f172a 100%);
-                box-shadow: 0 10px 30px rgba(0,0,0,.25);
-            }
-            .delivery-ground {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 60px;
-                background: linear-gradient(#1a2231,#151c25);
-            }
-            /* Figuren */
-            .delivery-person {
-                position: absolute;
-                bottom: 60px;
-                left: -120px;
-                width: 120px;
-                height: auto;
-                animation: person-walk 8s linear infinite;
-            }
-            .delivery-van {
-                position: absolute;
-                bottom: 60px;
-                left: 300px;
-                width: 260px;
-                height: auto;
-                animation: van-drive 8s ease-in-out infinite;
-            }
-            /* Animationen */
-            @keyframes person-walk {
-                0%   { transform: translateX(0); opacity:1; }
-                35%  { transform: translateX(400px); opacity:1; }
-                45%  { transform: translateX(400px); opacity:1; }
-                50%  { transform: translateX(400px); opacity:0; }
-                100% { transform: translateX(400px); opacity:0; }
-            }
-            @keyframes van-drive {
-                0%,55% { transform: translateX(0); }
-                100%   { transform: translateX(350px); }
-            }
-            /* Bewegungen optional deaktivieren */
-            @media (prefers-reduced-motion: reduce) {
-                .delivery-person,
-                .delivery-van { animation: none !important; }
-            }
+/* =======================
+   Optispar – Real Szene
+   Nur HTML + CSS, keine Scripts
+   ======================= */
+:root{
+  /* Feintuning-Variablen */
+  --cycle: 7.5s;           /* Gesamtdauer einer Sequenz */
+  --scene-h: 260px;        /* Höhe der Bühne */
+  --person-scale: 1;       /* Größe Person (1 = 100%) */
+  --van-scale: 1;          /* Größe Van */
+  --van-left: 60%;         /* Grundposition Van (links -> rechts) */
+  --person-start: 6%;      /* Start-Position Person */
+  --person-end: 52%;       /* Ziel-Position Person (vor dem Van) */
+  --pause-load: 40%;       /* Zeitpunkt (Prozent) – Ladepause beginnt */
+  --drive-off: 65%;        /* Zeitpunkt – Van fährt los */
+  --bg1:#0f172a; --bg2:#121827;
+  --floor:#1c2330;
+  --logo:#0e1626; --logoB:#dfe6ef;
+}
+
+/* Bühne */
+.op-real {
+  max-width: 980px;
+  margin: 24px auto;
+  border-radius: 18px;
+  overflow: hidden;
+  background: radial-gradient(120% 180% at 0% 0%, #141b2a 0%, var(--bg1) 55%, var(--bg2) 100%);
+  box-shadow: 0 18px 40px rgba(0,0,0,.35);
+  position: relative;
+  height: var(--scene-h);
+  isolation: isolate;
+}
+
+/* Boden */
+.op-real::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0; height:70px;
+  background: linear-gradient(var(--floor), #161c27 60%);
+  z-index:0;
+}
+
+/* Hilfs-Wrapper für z-index Reihenfolge */
+.op-layer{ position:absolute; inset:0; }
+
+/* Person */
+.op-person{
+  position:absolute; bottom:70px;
+  left: var(--person-start);
+  width:min(22vw, 220px);
+  transform-origin: bottom center;
+  transform: translateX(0) scale(var(--person-scale));
+  animation: walk var(--cycle) linear infinite;
+  will-change: transform, opacity;
+  z-index: 2;
+  filter: drop-shadow(0 10px 12px rgba(0,0,0,.25));
+}
+.op-person img{
+  display:block; width:100%; height:auto; pointer-events:none; user-select:none;
+}
+
+/* Optionales separates Paket (falls du eine box.png hast) */
+.op-box{
+  position:absolute; bottom:108px;
+  left: calc(var(--person-start) + 8%);
+  width:min(6vw, 64px); height:min(6vw, 64px);
+  background: url("box.png") center/contain no-repeat;
+  opacity: .0; /* Standard: aus, falls keine box.png vorhanden ist */
+  transform: translateX(0);
+  animation: box-move var(--cycle) linear infinite;
+  z-index: 2;
+  will-change: transform, opacity;
+}
+
+/* Van */
+.op-van{
+  position:absolute; bottom:72px;
+  left: var(--van-left);
+  width:min(40vw, 520px);
+  transform-origin: bottom left;
+  transform: translateX(0) scale(var(--van-scale));
+  animation: van-move var(--cycle) ease-in-out infinite;
+  z-index: 3;
+  filter: drop-shadow(0 12px 14px rgba(0,0,0,.35));
+}
+.op-van img{ display:block; width:100%; height:auto; }
+
+/* Logo-Badge, falls du Text auf dem Kofferaufbau möchtest */
+.op-logo{
+  position:absolute;
+  left:12%; top:20%;
+  padding:.35em .6em;
+  background: linear-gradient(#e9eef5,#dfe6ef);
+  color: var(--logo);
+  border-radius: .5em;
+  font: 800 clamp(10px,1.6vw,14px)/1.1 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  letter-spacing:.06em;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,.08), 0 4px 10px rgba(0,0,0,.15);
+  opacity:.9;
+}
+
+/* Staub-Puffs beim Losfahren */
+.op-dust{
+  position:absolute; bottom:80px;
+  left: calc(var(--van-left) + 4%);
+  width:14px; height:10px; border-radius:50%;
+  background: radial-gradient(closest-side, #aab6c8 40%, transparent 70%);
+  filter: blur(.3px);
+  opacity:0;
+  animation: dust var(--cycle) ease-out infinite;
+  z-index:1;
+}
+.op-dust.d2{ animation-delay: .15s; left: calc(var(--van-left) + 8%); }
+
+/* ===== Keyframes ===== */
+@keyframes walk{
+  0%   { transform: translateX(0) scale(var(--person-scale)); }
+  10%  { transform: translateX( calc(var(--person-end) * .25) ) scale(var(--person-scale)) translateY(-1px); }
+  20%  { transform: translateX( calc(var(--person-end) * .45) ) scale(var(--person-scale)); }
+  30%  { transform: translateX( calc(var(--person-end) * .70) ) scale(var(--person-scale)) translateY(-1px); }
+  40%  { transform: translateX( calc(var(--person-end)) ) scale(var(--person-scale)); }
+  50%  { transform: translateX( calc(var(--person-end)) ) scale(var(--person-scale)); }
+  60%  { transform: translateX( calc(var(--person-end)) ) scale(var(--person-scale)); opacity:.15; }
+  65%  { opacity:0; }
+  100% { transform: translateX( calc(var(--person-end)) ) scale(var(--person-scale)); opacity:0; }
+}
+
+@keyframes box-move{
+  0%,15% { opacity:0; transform: translateX(0); }
+  20%    { opacity:1; }
+  40%    { transform: translateX( calc(var(--person-end) - var(--person-start) - 2%) ); opacity:1; }
+  55%    { opacity:0; }
+  100%   { opacity:0; transform: translateX( calc(var(--person-end) - var(--person-start) - 2%) ); }
+}
+
+@keyframes van-move{
+  0%,64% { transform: translateX(0) scale(var(--van-scale)); }
+  68%    { transform: translateX( 8px ) scale(var(--van-scale)); }
+  100%   { transform: translateX( 200px ) scale(var(--van-scale)); }
+}
+
+@keyframes dust{
+  0%,64% { opacity:0; transform: translateX(0) translateY(0) scale(.6); }
+  70%    { opacity:.7; }
+  100%   { opacity:0; transform: translateX(90px) translateY(-8px) scale(1.2); }
+}
+
+/* Barrierefreiheit: Animationen aus, wenn gewünscht */
+@media (prefers-reduced-motion: reduce){
+  .op-real *{ animation: none !important; }
+}
+
+/* Responsives Feintuning */
+@media (max-width: 560px){
+  :root{
+    --scene-h: 220px;
+    --van-left: 56%;
+    --person-end: 46%;
+  }
+  .op-logo{ display:none; }
+}
         </style>
 
-        <section class="delivery-scene" aria-label="Zusteller lädt Paket in den Lieferwagen">
-            <div class="delivery-ground"></div>
-            <img class="delivery-person" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CjxjaXJjbGUgY3g9IjYwIiBjeT0iMjAiIHI9IjE4IiBmaWxsPSIjZjJjNmEwIi8+CjxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjUwIiByeD0iNCIgZmlsbD0iIzZiNzI4MCIvPgo8cmVjdCB4PSIzMiIgeT0iNDIiIHdpZHRoPSIxMiIgaGVpZ2h0PSI0MCIgcng9IjYiIGZpbGw9IiM2YjcyODAiLz4KPHJlY3QgeD0iNzYiIHk9IjQyIiB3aWR0aD0iMTIiIGhlaWdodD0iNDAiIHJ4PSI2IiBmaWxsPSIjNmI3MjgwIi8+CjxyZWN0IHg9IjQ4IiB5PSI5MCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjI2IiByeD0iNiIgZmlsbD0iIzZiNzI4MCIvPgo8cmVjdCB4PSI2MCIgeT0iOTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNiIgcng9IjYiIGZpbGw9IiM2YjcyODAiLz4KPHJlY3QgeD0iODgiIHk9IjU2IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHJ4PSIzIiBmaWxsPSIjZDRiNDgzIiBzdHJva2U9IiNiMDg5NjgiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=" alt="Zusteller mit Paket">
-            <img class="delivery-van" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMjYwIDEyMCI+CjxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjE1MCIgaGVpZ2h0PSI2MCIgcng9IjYiIGZpbGw9IiNlNWU3ZWIiIHN0cm9rZT0iIzljYTNhZiIgc3Ryb2tlLXdpZHRoPSI0Ii8+Cjx0ZXh0IHg9IjExNSIgeT0iNzgiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzBmMTcyYSI+T1BUSVNQQVI8L3RleHQ+CjxyZWN0IHg9IjE5MCIgeT0iNTAiIHdpZHRoPSI2MCIgaGVpZ2h0PSI1MCIgcng9IjEwIiBmaWxsPSIjZmJiZjI0Ii8+CjxyZWN0IHg9IjE5OCIgeT0iNTYiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjQiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iOTAiIGN5PSIxMDIiIHI9IjE2IiBmaWxsPSIjMTExODI3Ii8+CjxjaXJjbGUgY3g9IjkwIiBjeT0iMTAyIiByPSI4IiBmaWxsPSIjY2JkNWUxIi8+CjxjaXJjbGUgY3g9IjIxMCIgY3k9IjEwMiIgcj0iMTYiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMjEwIiBjeT0iMTAyIiByPSI4IiBmaWxsPSIjY2JkNWUxIi8+Cjwvc3ZnPg==" alt="Lieferwagen mit Optispar-Logo">
-        </section>
-        <!-- /Realistische Lieferanimation -->
+        <section class="op-real" role="img" aria-label="Zusteller läuft zum Lieferwagen, lädt Ware ein, der Van fährt los.">
+  <div class="op-layer">
+    <div class="op-van">
+      <img src="van.png" alt="OPTISPAR Lieferwagen" />
+      <div class="op-logo" aria-hidden="true">OPTISPAR</div>
+    </div>
+  </div>
+
+  <div class="op-layer">
+    <div class="op-person">
+      <img src="courier.png" alt="Zusteller mit Paket" />
+    </div>
+    <div class="op-box" aria-hidden="true"></div>
+  </div>
+
+  <div class="op-dust"></div>
+  <div class="op-dust d2"></div>
+</section>
+        <!-- /Optispar – Realistische Lieferanimation -->
 
         <!-- Navigation -->
         <nav class="nav">
