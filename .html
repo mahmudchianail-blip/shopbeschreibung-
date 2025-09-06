@@ -704,6 +704,101 @@
             outline-offset: 2px;
         }
 
+        /* Delivery Animation */
+        .lieferwagen-animation .animation {
+            position: relative;
+            width: 240px;
+            height: 100px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .lieferwagen-animation .person {
+            position: absolute;
+            top: 30px;
+            left: -40px;
+            font-size: 40px;
+            animation: person-move 3s infinite ease-in-out;
+        }
+
+        .lieferwagen-animation .truck {
+            position: absolute;
+            top: 10px;
+            left: 120px;
+            width: 100px;
+            height: 60px;
+            background: var(--brand-primary);
+            border-radius: 6px;
+            animation: truck-drive 3s infinite ease-in-out;
+        }
+
+        .lieferwagen-animation .truck::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -30px;
+            width: 30px;
+            height: 40px;
+            background: var(--brand-primary);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .lieferwagen-animation .logo {
+            position: absolute;
+            top: 22px;
+            left: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .lieferwagen-animation .wheel {
+            position: absolute;
+            bottom: -10px;
+            width: 20px;
+            height: 20px;
+            background: var(--brand-accent);
+            border-radius: 50%;
+        }
+
+        .lieferwagen-animation .wheel.front {
+            left: 10px;
+        }
+
+        .lieferwagen-animation .wheel.back {
+            right: 10px;
+        }
+
+        @keyframes person-move {
+            0% {
+                left: -40px;
+                opacity: 1;
+            }
+            40% {
+                left: 80px;
+                opacity: 1;
+            }
+            41% {
+                opacity: 0;
+            }
+            100% {
+                left: 80px;
+                opacity: 0;
+            }
+        }
+
+        @keyframes truck-drive {
+            0% {
+                left: 120px;
+            }
+            40% {
+                left: 120px;
+            }
+            100% {
+                left: 300px;
+            }
+        }
+
         /* Reduced Motion Support */
         @media (prefers-reduced-motion: reduce) {
             * {
@@ -751,7 +846,14 @@
 
         <!-- Lieferwagen Animation -->
         <section class="lieferwagen-animation">
-            <div id="lieferwagen-animation" style="width:240px;height:240px;margin:0 auto;"></div>
+            <div class="animation">
+                <div class="person">🧑</div>
+                <div class="truck">
+                    <div class="logo">LOGO</div>
+                    <div class="wheel front"></div>
+                    <div class="wheel back"></div>
+                </div>
+            </div>
         </section>
 
         <!-- Navigation -->
@@ -1091,90 +1193,6 @@
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
-        });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
-    <script>
-        const lieferwagenAnimationData = {
-            "v": "5.6.10",
-            "fr": 30,
-            "ip": 0,
-            "op": 60,
-            "w": 200,
-            "h": 200,
-            "nm": "moving box",
-            "ddd": 0,
-            "assets": [],
-            "layers": [
-                {
-                    "ddd": 0,
-                    "ind": 1,
-                    "ty": 4,
-                    "nm": "Box",
-                    "sr": 1,
-                    "ks": {
-                        "o": {"a": 0, "k": 100},
-                        "r": {"a": 0, "k": 0},
-                        "p": {
-                            "a": 1,
-                            "k": [
-                                {
-                                    "i": {"x": 0.667, "y": 1},
-                                    "o": {"x": 0.333, "y": 0},
-                                    "t": 0,
-                                    "s": [0, 100, 0],
-                                    "to": [83.333, 0, 0],
-                                    "ti": [0, 0, 0]
-                                },
-                                {"t": 60, "s": [200, 100, 0]}
-                            ]
-                        },
-                        "a": {"a": 0, "k": [0, 0, 0]},
-                        "s": {"a": 0, "k": [100, 100, 100]}
-                    },
-                    "shapes": [
-                        {
-                            "ty": "rc",
-                            "s": {"a": 0, "k": [50, 50]},
-                            "p": {"a": 0, "k": [0, 0]},
-                            "r": {"a": 0, "k": 0},
-                            "nm": "Rectangle Path 1"
-                        },
-                        {
-                            "ty": "fl",
-                            "c": {"a": 0, "k": [0.133, 0.533, 0.133, 1]},
-                            "o": {"a": 0, "k": 100},
-                            "r": 1,
-                            "nm": "Fill 1"
-                        },
-                        {
-                            "ty": "tr",
-                            "p": {"a": 0, "k": [0, 0]},
-                            "a": {"a": 0, "k": [0, 0]},
-                            "s": {"a": 0, "k": [100, 100]},
-                            "r": {"a": 0, "k": 0},
-                            "o": {"a": 0, "k": 100},
-                            "sk": {"a": 0, "k": 0},
-                            "sa": {"a": 0, "k": 0},
-                            "nm": "Transform"
-                        }
-                    ],
-                    "ip": 0,
-                    "op": 60,
-                    "st": 0,
-                    "bm": 0
-                }
-            ]
-        };
-
-        document.addEventListener("DOMContentLoaded", function () {
-            lottie.loadAnimation({
-                container: document.getElementById("lieferwagen-animation"),
-                renderer: "svg",
-                loop: true,
-                autoplay: true,
-                animationData: lieferwagenAnimationData
-            });
         });
     </script>
 </body>
