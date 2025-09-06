@@ -707,49 +707,91 @@
         /* Delivery Animation */
         .lieferwagen-animation .animation {
             position: relative;
-            width: 240px;
-            height: 100px;
+            width: 320px;
+            height: 120px;
             margin: 0 auto;
             overflow: hidden;
         }
 
         .lieferwagen-animation .person {
             position: absolute;
-            top: 30px;
+            bottom: 20px;
             left: -40px;
-            font-size: 40px;
-            animation: person-move 3s infinite ease-in-out;
+            width: 20px;
+            height: 60px;
+            background: #6b7280;
+            animation: person-walk 6s infinite linear;
+        }
+
+        .lieferwagen-animation .person::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -5px;
+            width: 30px;
+            height: 30px;
+            background: #f2c6a0;
+            border-radius: 50%;
+        }
+
+        .lieferwagen-animation .package {
+            position: absolute;
+            bottom: 30px;
+            left: -10px;
+            width: 30px;
+            height: 30px;
+            background: #d4b483;
+            border: 2px solid #b08968;
+            animation: package-move 6s infinite linear;
         }
 
         .lieferwagen-animation .truck {
             position: absolute;
-            top: 10px;
-            left: 120px;
-            width: 100px;
+            bottom: 20px;
+            left: 180px;
+            width: 120px;
             height: 60px;
-            background: var(--brand-primary);
-            border-radius: 6px;
-            animation: truck-drive 3s infinite ease-in-out;
+            animation: truck-drive 6s infinite linear;
         }
 
-        .lieferwagen-animation .truck::before {
-            content: '';
+        .lieferwagen-animation .cargo {
             position: absolute;
-            top: 10px;
+            left: 0;
+            top: 0;
+            width: 80px;
+            height: 50px;
+            background: #e5e7eb;
+            border: 2px solid #9ca3af;
+        }
+
+        .lieferwagen-animation .door {
+            position: absolute;
+            top: 0;
             left: -30px;
             width: 30px;
+            height: 50px;
+            background: #f3f4f6;
+            border: 2px solid #9ca3af;
+            animation: door-close 6s infinite linear;
+        }
+
+        .lieferwagen-animation .cab {
+            position: absolute;
+            left: 80px;
+            top: 10px;
+            width: 40px;
             height: 40px;
-            background: var(--brand-primary);
-            border-radius: 4px 0 0 4px;
+            background: #fbbf24;
+            border-radius: 8px 8px 4px 0;
         }
 
         .lieferwagen-animation .logo {
             position: absolute;
-            top: 22px;
-            left: 20px;
+            top: 15px;
+            left: 10px;
             font-size: 12px;
             font-weight: 700;
-            color: #fff;
+            color: #000;
         }
 
         .lieferwagen-animation .wheel {
@@ -757,46 +799,44 @@
             bottom: -10px;
             width: 20px;
             height: 20px;
-            background: var(--brand-accent);
+            background: #111827;
             border-radius: 50%;
         }
 
-        .lieferwagen-animation .wheel.front {
+        .lieferwagen-animation .wheel.back {
             left: 10px;
         }
 
-        .lieferwagen-animation .wheel.back {
-            right: 10px;
+        .lieferwagen-animation .wheel.front {
+            left: 80px;
         }
 
-        @keyframes person-move {
-            0% {
-                left: -40px;
-                opacity: 1;
-            }
-            40% {
-                left: 80px;
-                opacity: 1;
-            }
-            41% {
-                opacity: 0;
-            }
-            100% {
-                left: 80px;
-                opacity: 0;
-            }
+        @keyframes person-walk {
+            0% { left: -40px; opacity: 1; }
+            30% { left: 140px; opacity: 1; }
+            40% { left: 140px; opacity: 0; }
+            100% { left: 140px; opacity: 0; }
+        }
+
+        @keyframes package-move {
+            0% { left: -10px; opacity: 1; }
+            30% { left: 150px; opacity: 1; }
+            40% { left: 180px; opacity: 1; }
+            55% { left: 180px; opacity: 0; }
+            100% { left: 180px; opacity: 0; }
+        }
+
+        @keyframes door-close {
+            0% { left: -30px; }
+            40% { left: -30px; }
+            55% { left: 0; }
+            100% { left: 0; }
         }
 
         @keyframes truck-drive {
-            0% {
-                left: 120px;
-            }
-            40% {
-                left: 120px;
-            }
-            100% {
-                left: 300px;
-            }
+            0% { left: 180px; }
+            60% { left: 180px; }
+            100% { left: 360px; }
         }
 
         /* Reduced Motion Support */
@@ -847,11 +887,16 @@
         <!-- Lieferwagen Animation -->
         <section class="lieferwagen-animation">
             <div class="animation">
-                <div class="person">🧑</div>
+                <div class="person"></div>
+                <div class="package"></div>
                 <div class="truck">
-                    <div class="logo">LOGO</div>
-                    <div class="wheel front"></div>
+                    <div class="cargo">
+                        <div class="door"></div>
+                        <div class="logo">LOGO</div>
+                    </div>
+                    <div class="cab"></div>
                     <div class="wheel back"></div>
+                    <div class="wheel front"></div>
                 </div>
             </div>
         </section>
