@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>Optispar – Moderne eBay-Vorlage</title>
     <style>
         /* CSS Custom Properties für Light/Dark Mode */
@@ -49,21 +50,7 @@
             }
         }
 
-        /* Manual Dark Mode Toggle (optional) */
-        [data-theme="dark"] {
-            --bg-primary: #111827;
-            --bg-secondary: #1f2937;
-            --bg-accent: #374151;
-            --text-primary: #f9fafb;
-            --text-secondary: #d1d5db;
-            --text-muted: #9ca3af;
-            --border-light: #374151;
-            --border-medium: #4b5563;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
-        }
+        /* Manual Dark Mode toggle removed to rely solely on system preference */
 
         /* Reset und Base Styles */
         * {
